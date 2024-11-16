@@ -15,13 +15,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "updateSidebar" && message.data) {
-    try {
-      chrome.runtime.sendMessage(message).catch(() => {
-        // Silently handle connection errors
-      });
-    } catch (error) {
+    chrome.runtime.sendMessage(message).catch((error) => {
       // Silently handle connection errors
-    }
+    });
   } else if (message.type === "reloadProblemInfo" && sender.tab?.id) {
     chrome.tabs
       .sendMessage(sender.tab.id, { action: "getProblemData" })
