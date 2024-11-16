@@ -7,7 +7,7 @@ const Providers = ({ children }: React.PropsWithChildren) => {
     <BotProvider>
       <ThemeProvider defaultTheme="dark" storageKey="theme">
         {children}
-        <Toaster richColors />
+        <Toaster richColors position="top-center" closeButton />
       </ThemeProvider>
     </BotProvider>
   );

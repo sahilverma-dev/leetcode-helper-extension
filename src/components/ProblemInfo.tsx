@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { ProblemData } from "@/types/problem";
-import { ScrollArea } from "./ui/scroll-area";
+
 import { Button } from "./ui/button";
 import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useBot } from "@/hooks/useBot";
+import CodeSnippet from "./CodeSnippet";
+
 // import { extractCodeWithIndentation } from "@/lib/utils";
 
 interface Message {
@@ -12,7 +15,7 @@ interface Message {
 }
 
 const ProblemInfo = () => {
-  const [problemData, setProblemData] = useState<ProblemData | null>(null);
+  const { problemData, setProblemData } = useBot();
   const [isLoading, setIsLoading] = useState(false);
 
   const updateProblemInfo = async () => {
@@ -30,16 +33,44 @@ const ProblemInfo = () => {
       const [{ result }] = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: () => {
+          const extractCodeWithIndentation = (htmlString: string) => {
+            const div = document.createElement("div");
+            div.innerHTML = htmlString;
+            const lines = div.querySelectorAll(".view-line");
+            const codeLines = Array.from(lines).map((line) => {
+              const text = line.textContent || "";
+              const style = line.getAttribute("style") || "";
+              const topMatch = style.match(/top:(\d+)px/);
+              if (!text.trim() && topMatch) {
+                return "";
+              }
+              return text.replace(/\s+$/, "");
+            });
+            const codeWithIndentation = codeLines.join("\n");
+
+            return codeWithIndentation;
+          };
+
           const problemTitle = document.title.replace(" - LeetCode", "").trim();
+          const problemId =
+            document.location.pathname
+              .slice("/problems/".length)
+              .replace(/\/(description|solution|submissions|discuss)?$/, "") ||
+            "";
           const problemDescription =
             document
               .querySelector("[data-track-load=description_content]")
               ?.textContent?.trim() || "";
 
           const editorElement = document.querySelector("#editor");
-          // const code = editorElement?.querySelector(".view-lines")
-          //   ? editorElement?.querySelector(".view-lines")?.textContent?.trim()
-          //   : "";
+
+          const code = editorElement?.querySelector(".view-lines")
+            ? extractCodeWithIndentation(
+                editorElement
+                  ?.querySelector(".view-lines")
+                  ?.innerHTML?.trim() || ""
+              )
+            : "";
 
           const language =
             editorElement?.querySelector("button")?.textContent?.trim() || "";
@@ -51,10 +82,11 @@ const ProblemInfo = () => {
               ?.textContent?.trim() || "";
 
           return {
+            id: problemId,
             title: problemTitle,
             content: problemDescription,
-            code: "",
-            // code: code ? extractCodeWithIndentation(code) : "",
+            // code: "",
+            code: code,
             language,
             difficulty: problemDifficulty,
           };
@@ -63,9 +95,10 @@ const ProblemInfo = () => {
 
       if (result) {
         setProblemData({
+          id: result.id,
           title: result.title,
           content: result.content,
-          code: result.code,
+          code: result?.code || "",
           language: result.language,
           difficulty: result.difficulty,
         });
@@ -97,7 +130,7 @@ const ProblemInfo = () => {
 
   if (!problemData) {
     return (
-      <ScrollArea className="p-4 text-center space-y-8">
+      <div className="h-[calc(100vh-180px)] flex flex-col items-center justify-center p-4 text-center gap-2">
         <p className="text-muted-foreground">
           No problem information available
         </p>
@@ -111,17 +144,18 @@ const ProblemInfo = () => {
           <RefreshCw className={`${isLoading ? "animate-spin" : ""} h-4 w-4`} />
           Load Information
         </Button>
-      </ScrollArea>
+      </div>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-180px)] w-full">
+    <div className=" w-full">
       <div className="p-4 space-y-6">
         <div className="flex items-center justify-between gap-2">
           <h2 className="text-xl font-bold text-primary truncate">
             {problemData.title}
           </h2>
+          <p>{problemData.id}</p>
           <Button
             variant="outline"
             size="icon"
@@ -136,25 +170,24 @@ const ProblemInfo = () => {
             <span className="hidden sm:inline">Update</span>
           </Button>
         </div>
-        <div className="text-sm">{problemData.content}</div>
-        <div>
-          <h3 className="text-lg font-semibold mb-2">
-            Your Code ({problemData.language})
-          </h3>
-          <div className="bg-secondary p-4 rounded-lg text-sm">
-            <p className="text-wrap text-xs">
-              {typeof problemData.code === "string"
-                ? problemData.code
-                : "Code not available"}
-            </p>
-          </div>
-        </div>
         {problemData.difficulty && (
           <div className="mt-2 text-sm">
             <span className="font-semibold">Difficulty:</span>{" "}
             <span className={`font-medium `}>{problemData.difficulty}</span>
           </div>
         )}
+        <div className="text-sm">{problemData.content}</div>
+        <div>
+          <h3 className="text-lg font-semibold mb-2">
+            Your Code ({problemData.language})
+          </h3>
+          {problemData?.code && (
+            <CodeSnippet
+              code={problemData?.code}
+              language={problemData.language}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

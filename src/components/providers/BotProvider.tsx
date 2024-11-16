@@ -1,11 +1,14 @@
 import { BotContext } from "@/context/BotContext";
 import { useEffect, useState, useCallback } from "react";
 import Loading from "../Loading";
+import { ProblemData } from "@/types/problem";
 
 const BotProvider = ({ children }: React.PropsWithChildren) => {
   const [apiKey, setApiKey] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isValidPage, setIsValidPage] = useState(false);
+
+  const [problemData, setProblemData] = useState<ProblemData | null>(null);
 
   const checkValidPage = useCallback((url: string | undefined) => {
     return url?.includes("leetcode.com/problems/") ?? false;
@@ -63,11 +66,13 @@ const BotProvider = ({ children }: React.PropsWithChildren) => {
     <BotContext.Provider
       value={{
         apiKey,
-        setApiKey,
         isLoading,
-        setIsLoading,
         isValidPage,
+        problemData,
+        setApiKey,
+        setIsLoading,
         setIsValidPage,
+        setProblemData,
       }}
     >
       {isLoading ? <Loading /> : children}

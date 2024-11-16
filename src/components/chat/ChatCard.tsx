@@ -4,6 +4,10 @@ import { useState } from "react";
 
 // icons
 import { FaRobot as BotIcon, FaUserCircle as UserIcon } from "react-icons/fa";
+import { Button } from "../ui/button";
+import { CopyIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
+import { toast } from "sonner";
 
 interface Props {
   by: "bot" | "user";
@@ -16,6 +20,7 @@ const ChatCard: React.FC<Props> = ({ by, message, type }) => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message);
+    toast.success("Copied to clipboard");
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
@@ -47,12 +52,17 @@ const ChatCard: React.FC<Props> = ({ by, message, type }) => {
             <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">
               {by === "user" ? "You" : "AI Assistant"}
             </p>
-            <button
-              onClick={handleCopy}
-              className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              {isCopied ? "Copied!" : "Copy"}
-            </button>
+            {by === "bot" && (
+              <Button
+                onClick={handleCopy}
+                size={"icon"}
+                variant={"outline"}
+                type="button"
+                className="px-0 text-[8px] aspect-square"
+              >
+                {isCopied ? <CheckIcon size={5} /> : <CopyIcon size={5} />}
+              </Button>
+            )}
           </div>
           {type === "markdown" ? (
             <ReactMarkdown className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
