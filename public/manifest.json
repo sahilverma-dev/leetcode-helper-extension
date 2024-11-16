@@ -1,0 +1,22 @@
+{
+  "name": "LeetCode Helper",
+  "manifest_version": 3,
+  "version": "1.0",
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_title": "Click to open panel"
+  },
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "permissions": ["sidePanel", "tabs", "scripting", "storage"],
+  "host_permissions": ["https://leetcode.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["content-script.js"]
+    }
+  ]
+}
