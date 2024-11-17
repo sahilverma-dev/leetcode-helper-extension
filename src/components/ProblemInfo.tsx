@@ -103,6 +103,8 @@ const ProblemInfo = () => {
           difficulty: result.difficulty,
         });
         toast.success("Problem information updated");
+      } else {
+        toast.error("Failed to retrieve problem information");
       }
     } catch (error) {
       console.error("Error updating problem info:", error);
@@ -130,9 +132,16 @@ const ProblemInfo = () => {
 
   if (!problemData) {
     return (
-      <div className="h-[calc(100vh-180px)] flex flex-col items-center justify-center p-4 text-center gap-2">
+      <div className="h-[calc(100vh-180px)] flex flex-col items-center justify-center p-2 text-center gap-2">
+        <img
+          src="/icons/icon128.png"
+          alt="Leetcode Helper Bot"
+          className="w-16 h-16 md:w-20 md:h-20"
+        />
         <p className="text-muted-foreground">
-          No problem information available
+          No problem information available.
+          <br />
+          You must load a problem to use this bot.
         </p>
         <Button
           variant="outline"
@@ -142,7 +151,7 @@ const ProblemInfo = () => {
           className="gap-2"
         >
           <RefreshCw className={`${isLoading ? "animate-spin" : ""} h-4 w-4`} />
-          Load Information
+          Load Problem Information
         </Button>
       </div>
     );
@@ -150,24 +159,28 @@ const ProblemInfo = () => {
 
   return (
     <div className=" w-full">
-      <div className="p-4 space-y-6">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-xl font-bold text-primary truncate">
-            {problemData.title}
-          </h2>
-          <p>{problemData.id}</p>
+      <div className="p-2 space-y-6">
+        <div className="flex flex-row items-center justify-between gap-4">
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-bold text-primary truncate">
+              {problemData.title}
+            </h2>
+            <p className="text-base text-red-500">
+              Update information after you write or change something to get
+              better and updated results.
+            </p>
+          </div>
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={updateProblemInfo}
             disabled={isLoading}
-            className="gap-2 px-0 aspect-square text-sm"
+            className="px-4 py-2 aspect-square text-base"
           >
             <RefreshCw
-              size={14}
-              className={`${isLoading ? "animate-spin" : ""} `}
+              size={20}
+              className={`${isLoading ? "animate-spin" : ""}`}
             />
-            <span className="hidden sm:inline">Update</span>
           </Button>
         </div>
         {problemData.difficulty && (

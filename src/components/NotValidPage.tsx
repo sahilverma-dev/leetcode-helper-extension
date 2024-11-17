@@ -1,10 +1,16 @@
 const NotValidPage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-background p-4">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100 text-center">
+      <img
+        src="/icons/icon128.png"
+        alt=""
+        className="w-16 h-16 md:w-24 md:h-24 mb-2 md:mb-4"
+      />
+
+      <h1 className="text-lg  md:text-3xl font-bold mb-3 md:mb-6 text-gray-800 dark:text-gray-100 text-center">
         Oops! You're Not on a LeetCode Problem Page
       </h1>
-      <p className="text-lg mb-8 text-gray-600 dark:text-gray-300 text-center max-w-md">
+      <p className="text-xs md:text-lg mb-8 text-gray-600 dark:text-gray-300 text-center max-w-md">
         It looks like you're not currently viewing a LeetCode problem. To use
         the LeetCode Assistant:
       </p>
@@ -36,7 +42,7 @@ const NotValidPage = () => {
           className="h-10 hidden dark:block object-contain transition-transform hover:scale-105 duration-300"
         />
       </div>
-      <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+      <p className="text-xs text-gray-500 dark:text-gray-400 italic">
         Happy coding! We're here to assist when you're ready.
       </p>
     </div>

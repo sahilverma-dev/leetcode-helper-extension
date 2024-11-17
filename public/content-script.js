@@ -1,73 +1,74 @@
-function getProblemData() {
-  const problemTitle = document.title.replace(" - LeetCode", "").trim();
+// function getProblemData() {
+//   const problemTitle = document.title.replace(" - LeetCode", "").trim();
 
-  const problemId =
-    document.location.pathname
-      .slice("/problems/".length)
-      .replace(/\/(description|solution|submissions|discuss)?$/, "") || "";
+//   const problemId =
+//     document.location.pathname
+//       .slice("/problems/".length)
+//       .replace(/\/(description|solution|submissions|discuss)?$/, "") || "";
 
-  const problemDescription =
-    document.querySelector("[data-track-load=description_content]") || "";
+//   const problemDescription =
+//     document.querySelector("[data-track-load=description_content]") || "";
 
-  const editorElement = document.querySelector("#editor");
-  const code = editorElement?.querySelector(".view-lines")
-    ? editorElement?.querySelector(".view-lines")?.innerHTML?.trim()
-    : "";
-  const language =
-    editorElement?.querySelector("button")?.textContent?.trim() || "";
+//   const editorElement = document.querySelector("#editor");
+//   const code = editorElement?.querySelector(".view-lines")
+//     ? editorElement?.querySelector(".view-lines")?.innerHTML?.trim()
+//     : "";
+//   const language =
+//     editorElement?.querySelector("button")?.textContent?.trim() || "";
 
-  const problemDifficulty =
-    document
-      .querySelector(
-        ".flexlayout__tab > div > div.flex.w-full.flex-1.flex-col.gap-4.overflow-y-auto.px-4.py-5 > div.flex.gap-1 > div"
-      )
-      .textContent?.trim() || "";
+//   const problemDifficulty =
+//     document
+//       .querySelector(
+//         ".flexlayout__tab > div > div.flex.w-full.flex-1.flex-col.gap-4.overflow-y-auto.px-4.py-5 > div.flex.gap-1 > div"
+//       )
+//       .textContent?.trim() || "";
 
-  console.log(code, extractCodeWithIndentation(code));
+//   console.log(code, extractCodeWithIndentation(code));
 
-  return {
-    id: problemId,
-    title: problemTitle,
-    content: problemDescription,
-    code,
-    language,
-    difficulty: problemDifficulty,
-  };
-}
+//   return {
+//     id: problemId,
+//     title: problemTitle,
+//     content: problemDescription,
+//     code,
+//     language,
+//     difficulty: problemDifficulty,
+//   };
+// }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "getProblemData") {
-    const data = getProblemData();
-    chrome.runtime.sendMessage({
-      type: "updateSidebar",
-      data: data,
-    });
-  }
-});
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.action === "getProblemData") {
+//     const data = getProblemData();
+//     chrome.runtime.sendMessage({
+//       type: "updateSidebar",
+//       data: data,
+//     });
+//   }
+// });
 
-function extractCodeWithIndentation(htmlString) {
-  // // Create a temporary div to parse the HTML
-  // const div = document.createElement("div");
-  // div.innerHTML = htmlString;
+// function extractCodeWithIndentation(htmlString) {
+//   // // Create a temporary div to parse the HTML
+//   // const div = document.createElement("div");
+//   // div.innerHTML = htmlString;
 
-  // // Get all lines
-  // const lines = div.querySelectorAll(".view-line");
+//   // // Get all lines
+//   // const lines = div.querySelectorAll(".view-line");
 
-  // // Process each line
-  // const codeLines = Array.from(lines).map((line) => {
-  //   // Get the text content
-  //   let text = line.textContent || "";
+//   // // Process each line
+//   // const codeLines = Array.from(lines).map((line) => {
+//   //   // Get the text content
+//   //   let text = line.textContent || "";
 
-  //   // If the line is empty (just spaces or nothing), return an empty string
-  //   if (!text.trim()) {
-  //     return "";
-  //   }
+//   //   // If the line is empty (just spaces or nothing), return an empty string
+//   //   if (!text.trim()) {
+//   //     return "";
+//   //   }
 
-  //   return text;
-  // });
+//   //   return text;
+//   // });
 
-  // // Join the lines with newlines
-  // return codeLines.join("\n");
+//   // // Join the lines with newlines
+//   // return codeLines.join("\n");
 
-  return "code";
-}
+//   return "code";
+// }
+console.log("content script");

@@ -15,12 +15,14 @@ Instructions:
 8. Consider edge cases and optimizations.
 
 Response format:
-{ "output": "Markdown string with your hint or explanation" }
+"Your response should be a string with your hint or explanation"
 
 Problem Statement:
 '''
 {{problem_statement}}
 '''
+
+Problem Difficulty: {{difficulty}}
 
 User Programming Language: {{programming_language}}
 

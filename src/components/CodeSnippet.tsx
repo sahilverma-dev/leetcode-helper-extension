@@ -1,18 +1,28 @@
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
-import "prism-theme-github/themes/prism-theme-github-dark.css";
+import {
+  solarizedlight,
+  solarizedDarkAtom,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 
 import { ScrollArea } from "./ui/scroll-area";
+import { useTheme } from "./providers/ThemeProvider";
 
 interface Props {
   code: string;
   language: string;
+  isDarkMode?: boolean;
 }
 
 const CodeSnippet: React.FC<Props> = ({ code, language }) => {
+  const { theme } = useTheme();
   return (
-    <ScrollArea className="w-full rounded-xl overflow-y-scroll h-[200px]">
-      <SyntaxHighlighter language={language}>{code}</SyntaxHighlighter>
+    <ScrollArea className="w-full max-w-md rounded-xl overflow-auto h-[200px]">
+      <SyntaxHighlighter
+        language={language}
+        style={theme === "dark" ? solarizedDarkAtom : solarizedlight}
+      >
+        {code}
+      </SyntaxHighlighter>
     </ScrollArea>
   );
 };

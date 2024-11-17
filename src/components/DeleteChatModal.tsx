@@ -29,12 +29,12 @@ const DeleteChatModal: React.FC<DeleteChatModalProps> = ({
             undone.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={onOpenChange}>
-            Cancel
-          </Button>
+        <DialogFooter className="flex flex-row gap-2">
           <Button variant="destructive" onClick={onConfirm}>
             Delete
+          </Button>
+          <Button variant="outline" onClick={onOpenChange}>
+            Cancel
           </Button>
         </DialogFooter>
       </DialogContent>

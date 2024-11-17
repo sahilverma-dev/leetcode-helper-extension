@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +30,14 @@ const ApiKeyForm = () => {
       apiKey: "",
     },
   });
+
+  useEffect(() => {
+    const storedApiKey = localStorage.getItem("apiKey");
+    if (storedApiKey) {
+      setApiKey(storedApiKey);
+      form.setValue("apiKey", storedApiKey);
+    }
+  }, [setApiKey, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     localStorage.setItem("apiKey", values.apiKey);

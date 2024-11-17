@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 // icons
-import { FaRobot as BotIcon, FaUserCircle as UserIcon } from "react-icons/fa";
+import { FaUserCircle as UserIcon } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { CopyIcon } from "lucide-react";
 import { CheckIcon } from "lucide-react";
@@ -26,22 +27,30 @@ const ChatCard: React.FC<Props> = ({ by, message, type }) => {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
       className={cn(
-        "border bg-secondary mb-2 rounded-lg p-3 flex items-start w-auto max-w-[90%] md:max-w-lg hover:bg-secondary/80 transition-colors shadow-sm dark:shadow-gray-800",
+        "border bg-secondary mb-2 rounded-lg p-3 flex items-start w-full max-w-[90%] md:max-w-lg hover:bg-secondary/80 transition-colors shadow-sm dark:shadow-gray-800",
         by === "user" ? "flex-row-reverse ml-auto" : ""
       )}
     >
       <div
         className={cn("flex gap-3", by === "user" ? "flex-row-reverse" : "")}
       >
-        <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-blue-100 dark:bg-blue-900 rounded-full overflow-hidden">
-          {by === "user" ? (
-            <UserIcon size={24} className="text-blue-600 dark:text-blue-300" />
-          ) : (
-            <BotIcon size={24} className="text-green-600 dark:text-green-300" />
-          )}
-        </div>
+        {by === "bot" ? (
+          <img
+            src="/icons/icon128.png"
+            alt="Leetcode Helper Bot"
+            className="w-10 h-10 md:w-14 md:h-14 "
+          />
+        ) : (
+          <div className="w-10 h-10 md:w-14 md:h-14">
+            <UserIcon size={30} className="text-blue-600 dark:text-blue-300" />
+          </div>
+        )}
         <div
           className={cn(
             "flex flex-col flex-grow max-w-[calc(100%-52px)]",
@@ -50,7 +59,7 @@ const ChatCard: React.FC<Props> = ({ by, message, type }) => {
         >
           <div className="flex items-center justify-between w-full mb-1">
             <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">
-              {by === "user" ? "You" : "AI Assistant"}
+              {by === "user" ? "You" : "Leetcode Helper Bot"}
             </p>
             {by === "bot" && (
               <Button
@@ -75,7 +84,7 @@ const ChatCard: React.FC<Props> = ({ by, message, type }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

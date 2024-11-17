@@ -1,47 +1,30 @@
-import { useEffect, useState } from "react";
-import { useBot } from "@/hooks/useBot";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
 import ChatCard from "./ChatCard";
 import DeleteChatModal from "../DeleteChatModal";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import ChatSkeleton from "./ChatSkeleton";
+import { Chat } from "../ChatBox";
 
-interface Chat {
-  by: "bot" | "user";
-  message: string;
-  type: "text" | "markdown";
+interface Props {
+  chats: Chat[];
+  isLoading: boolean;
+  onDeleteChat: () => void;
 }
 
-const ChatList = () => {
-  const { problemData } = useBot();
-  const [chats, setChats] = useState<Chat[]>([]);
+const ChatList: React.FC<Props> = ({ chats, isLoading, onDeleteChat }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const chatListRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (problemData?.id) {
-      setIsLoading(true);
-      chrome.storage.local.get([problemData.id], (result) => {
-        setChats(result[problemData.id] || []);
-        setIsLoading(false);
-      });
+    // Scroll to the bottom of the chat list whenever chats change
+    if (chatListRef.current) {
+      chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
     }
-  }, [problemData?.id]);
-
-  const handleDeleteChats = () => {
-    if (problemData?.id) {
-      chrome.storage.local.remove([problemData.id], () => {
-        setChats([]);
-        setShowDeleteModal(false);
-        toast.success("Chat history cleared");
-      });
-    }
-  };
-
-  if (isLoading) {
-    return <ChatSkeleton />;
-  }
+  }, [chats]);
 
   if (chats.length === 0) {
     return (
@@ -53,24 +36,42 @@ const ChatList = () => {
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xs font-semibold">Chat History</h2>
         <Button
           variant="destructive"
-          size="sm"
+          size="icon"
           onClick={() => setShowDeleteModal(true)}
-          className="gap-2"
+          className="text-xs aspect-square px-0"
         >
-          <Trash2 size={16} />
-          Clear Chat
+          <Trash2 size={10} />
         </Button>
       </div>
-      {chats.map((chat, index) => (
-        <ChatCard key={index} {...chat} />
-      ))}
+      <div ref={chatListRef}>
+        <AnimatePresence>
+          {chats.map((chat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChatCard {...chat} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        {isLoading && <ChatSkeleton />}
+      </div>
+
       <DeleteChatModal
         open={showDeleteModal}
         onOpenChange={() => setShowDeleteModal(false)}
-        onConfirm={handleDeleteChats}
+        onConfirm={() => {
+          onDeleteChat();
+          setShowDeleteModal(false);
+          toast.success("Chat deleted successfully");
+        }}
       />
     </div>
   );

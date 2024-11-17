@@ -6,7 +6,14 @@ import { buttonVariants } from "./ui/button";
 const Header = () => {
   return (
     <div className="text-sm p-2 border-b flex items-center justify-between">
-      <p className="font-bold px-2">Leetcode ChatGPT</p>
+      <p className="font-bold px-2 flex items-center gap-2">
+        <img
+          src="/icons/icon128.png"
+          alt="Leetcode Helper Bot"
+          className="w-6 h-6 md:w-8 md:h-8"
+        />
+        Leetcode Helper Bot
+      </p>
       <div className="flex items-center gap-2">
         <a
           href="https://github.com/sahilverma-dev/Leetcode-ChatGPT"
