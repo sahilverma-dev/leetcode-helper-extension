@@ -144,7 +144,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgments
 
-- [OpenAI](https://openai.com/) for providing the AI model.
+- [Gemini](https://gemini.ai/) for providing the AI model.
 - [LeetCode](https://leetcode.com/) for the coding challenges.
 - [React Community](https://reactjs.org/community/support.html) for their support and resources.
 
