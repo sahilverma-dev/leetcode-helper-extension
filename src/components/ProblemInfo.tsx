@@ -51,12 +51,30 @@ const ProblemInfo = () => {
             return codeWithIndentation;
           };
 
+          const extractLeetCodeProblemName = (url: string): string | null => {
+            // Check if it's a valid URL
+            try {
+              const urlObj = new URL(url);
+              if (!urlObj.hostname.includes("leetcode.com")) {
+                return null;
+              }
+
+              // Split the pathname and extract problem name
+              const parts = urlObj.pathname.split("/").filter(Boolean);
+              if (parts[0] !== "problems" || parts.length < 2) {
+                return null;
+              }
+
+              return parts[1];
+            } catch {
+              return null;
+            }
+          };
+
           const problemTitle = document.title.replace(" - LeetCode", "").trim();
+
           const problemId =
-            document.location.pathname
-              .slice("/problems/".length)
-              .replace(/\/(description|solution|submissions|discuss)?$/, "") ||
-            "";
+            extractLeetCodeProblemName(document.location.href) || "";
           const problemDescription =
             document
               .querySelector("[data-track-load=description_content]")
@@ -165,7 +183,7 @@ const ProblemInfo = () => {
             <h2 className="text-2xl font-bold text-primary truncate">
               {problemData.title}
             </h2>
-            <p className="text-base text-red-500">
+            <p className="text-xs text-red-500">
               Update information after you write or change something to get
               better and updated results.
             </p>

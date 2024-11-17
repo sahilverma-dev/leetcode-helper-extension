@@ -88,7 +88,9 @@ const ChatBox = () => {
 
   useEffect(() => {
     if (problemData?.id) {
+      console.log(problemData);
       chrome.storage.local.get([problemData.id], (result) => {
+        console.log(result);
         setChats(result[problemData.id] || []);
       });
     }

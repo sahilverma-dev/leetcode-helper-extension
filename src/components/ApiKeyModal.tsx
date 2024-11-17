@@ -19,19 +19,21 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ open, onOpenChange }) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95%]">
         <DialogHeader>
-          <DialogTitle>Enter your open ai api key</DialogTitle>
+          <DialogTitle>Enter your Gemini API Key</DialogTitle>
           <DialogDescription>
+            Don't have a Gemini API key? You can get one for free with limited
+            credits from{" "}
             <a
-              href="https://platform.openai.com/api-keys"
+              href="https://ai.google.dev/"
               target="_blank"
               className={buttonVariants({
                 variant: "link",
-                className: "text-sm px-0",
+                className: "text-sm !px-0",
               })}
             >
-              Click here
-            </a>{" "}
-            to get your api key
+              Google AI
+            </a>
+            .
           </DialogDescription>
         </DialogHeader>
         <ApiKeyForm />

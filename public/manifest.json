@@ -18,12 +18,6 @@
   "side_panel": {
     "default_path": "index.html"
   },
-  "permissions": ["sidePanel", "tabs", "scripting", "storage"],
-  "host_permissions": ["https://leetcode.com/*"],
-  "content_scripts": [
-    {
-      "matches": ["https://leetcode.com/problems/*"],
-      "js": ["content-script.js"]
-    }
-  ]
+  "permissions": ["sidePanel", "tabs", "scripting", "storage", "clipboardRead"],
+  "host_permissions": ["https://leetcode.com/*"]
 }

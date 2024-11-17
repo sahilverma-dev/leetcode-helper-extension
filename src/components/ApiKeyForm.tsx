@@ -46,9 +46,14 @@ const ApiKeyForm = () => {
   }
 
   async function handlePaste() {
-    const apiKey = await navigator.clipboard.readText();
-    if (apiKey) {
-      form.setValue("apiKey", apiKey);
+    try {
+      const text = await navigator.clipboard.readText();
+
+      if (text) {
+        form.setValue("apiKey", text);
+      }
+    } catch (error) {
+      toast.error("Don't have permission to access clipboard");
     }
   }
 
