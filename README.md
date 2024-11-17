@@ -3,7 +3,7 @@
 <!-- LOGO -->
 
 <div align="center">
-  <a href="https://github.com/sahilverma-dev/Leetcode-Helper-Bot">
+  <a href="https://github.com/sahilverma-dev/leetcode-helper-extension">
     <img src="./public/icons/icon128.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -12,11 +12,11 @@
   <p align="center">
     A browser extension designed to assist users in solving LeetCode problems by providing real-time information and tools.
     <br />
-    <a href="https://github.com/sahilverma-dev/Leetcode-Helper-Bot">View Demo</a>
+    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension">View Demo</a>
     ·
-    <a href="https://github.com/sahilverma-dev/Leetcode-Helper-Bot/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
-    <a href="https://github.com/sahilverma-dev/Leetcode-Helper-Bot/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
