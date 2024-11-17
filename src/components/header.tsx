@@ -16,7 +16,7 @@ const Header = () => {
       </p>
       <div className="flex items-center gap-2">
         <a
-          href="https://github.com/sahilverma-dev/Leetcode-ChatGPT"
+          href="https://github.com/sahilverma-dev/leetcode-helper-extension"
           target="_blank"
           rel="noopener noreferrer"
           className={buttonVariants({
