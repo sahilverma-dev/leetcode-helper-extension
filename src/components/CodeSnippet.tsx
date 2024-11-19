@@ -16,7 +16,7 @@ interface Props {
 const CodeSnippet: React.FC<Props> = ({ code, language }) => {
   const { theme } = useTheme();
   return (
-    <ScrollArea className="w-full max-w-md rounded-xl overflow-auto h-[200px]">
+    <ScrollArea className="w-[300px] rounded-xl overflow-auto h-[200px]">
       <SyntaxHighlighter
         language={language}
         style={theme === "dark" ? solarizedDarkAtom : solarizedlight}
