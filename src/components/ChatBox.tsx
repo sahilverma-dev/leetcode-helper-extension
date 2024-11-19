@@ -6,10 +6,11 @@ import Header from "./header";
 import ProblemInfo from "./ProblemInfo";
 import { useBot } from "@/hooks/useBot";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+
 import { useMutation } from "@/hooks/useMutation";
 import { SYSTEM_PROMPT } from "@/constants/prompt";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { toast } from "sonner";
 
 export interface Chat {
   by: "bot" | "user";
@@ -22,14 +23,15 @@ const ChatBox = () => {
   const [chats, setChats] = useState<Chat[]>([]);
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: () => {
+    mutationFn: (message: string) => {
       const systemPromptModified = SYSTEM_PROMPT.replace(
         "{{problem_statement}}",
         problemData?.content as string
       )
         .replace("{{problem_difficulty}}", problemData?.difficulty as string)
         .replace("{{programming_language}}", problemData?.language as string)
-        .replace("{{user_code}}", problemData?.code as string);
+        .replace("{{user_code}}", problemData?.code as string)
+        .replace("{{user_message}}", message);
 
       const genAI = new GoogleGenerativeAI(apiKey);
 
@@ -77,7 +79,6 @@ const ChatBox = () => {
           type: "markdown",
         },
       ]);
-      toast.success("Message sent successfully");
     },
 
     onError: (error) => {
