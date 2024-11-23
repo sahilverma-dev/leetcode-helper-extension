@@ -1,151 +1,50 @@
-<a id="readme-top"></a>
+# React + TypeScript + Vite
 
-<!-- LOGO -->
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-<div align="center">
-  <a href="https://github.com/sahilverma-dev/leetcode-helper-extension">
-    <img src="./public/icons/icon128.png" alt="Logo" width="80" height="80">
-  </a>
+Currently, two official plugins are available:
 
-  <h3 align="center">Leetcode Helper Bot</h3>
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-  <p align="center">
-    A browser extension designed to assist users in solving LeetCode problems by providing real-time information and tools.
-    <br />
-    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension">View Demo</a>
-    ·
-    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/sahilverma-dev/leetcode-helper-extension/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
-  </p>
-</div>
+## Expanding the ESLint configuration
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-<!-- ABOUT THE PROJECT -->
+- Configure the top-level `parserOptions` property like this:
 
-## About The Project
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-![Chat Screen Shot](./screenshots/chat.png)
-![Problem Info Screen Shot](./screenshots/load-info.png)
-![Invalid Page Screen Shot](./screenshots/invalid-page.png)
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-This project is a browser extension designed to assist users in solving LeetCode problems by providing real-time information and tools.
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-### Features
-
-- **Real-time Problem Information**: Fetch and display problem details directly from LeetCode.
-- **Chat Interface**: Interact with the bot to get hints and guidance on solving problems.
-- **Syntax Highlighting**: View code snippets with syntax highlighting for better readability.
-- **Chat History**: Maintain a history of your interactions with the bot.
-- **Dark Mode Support**: Automatically switch between light and dark themes based on user preference.
-- **User-Friendly Interface**: Easy-to-use interface for seamless interaction.
-
-### Built With
-
-- [React](https://reactjs.org/) - A JavaScript library for building user interfaces.
-- [TypeScript](https://www.typescriptlang.org/) - A typed superset of JavaScript that compiles to plain JavaScript.
-- [Framer Motion](https://www.framer.com/motion/) - A library for animations in React.
-- [React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter) - A library for syntax highlighting in code snippets.
-- [Chrome Extensions API](https://developer.chrome.com/docs/extensions/mv3/) - For building the browser extension.
-
-## Getting Started
-
-To get a local copy up and running, follow these steps.
-
-### Prerequisites
-
-- Node.js (v14 or later)
-- npm (Node Package Manager)
-
-### Installation
-
-1. Clone the repo
-   ```bash
-   git clone https://github.com/sahilverma-dev/leetcode-helper-extension
-   ```
-2. Navigate to the project directory
-   ```bash
-   cd leetcode-helper-extension
-   ```
-3. Install the required packages
-   ```bash
-   npm install
-   ```
-4. Build the project
-   ```bash
-   npm run build
-   ```
-5. Load the extension in your browser:
-   - Open Chrome and go to `chrome://extensions/`
-   - Enable "Developer mode"
-   - Click "Load unpacked" and select the `build` directory of your project.
-
-## Usage
-
-1. Open the LeetCode website and navigate to a problem.
-2. Click on the LeetCode Helper Bot extension icon in your browser.
-3. Interact with the bot to get hints and guidance on solving the problem.
-4. Use the chat interface to maintain a history of your interactions.
-
-## Roadmap
-
-- [ ] Add more features for enhanced user experience.
-- [ ] Improve the chat interface with more interactive elements.
-- [ ] Implement user authentication for personalized experiences.
-- [ ] Expand support for additional coding platforms.
-
-## Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact Me
-
-- **Email:** [sahilverma.webdev@gmail.com](mailto:sahilverma.webdev@gmail.com)
-- **Portfolio:** [sahilverma.dev](https://sahilverma.dev/)
-- **GitHub:** [@sahilverma-dev](https://github.com/sahilverma-dev)
-- **Twitter:** [@sahilverma_dev](https://twitter.com/sahilverma_dev)
-- **LinkedIn:** [sahilverma-dev](https://www.linkedin.com/in/sahilverma-dev/)
-
-## Acknowledgments
-
-- [Gemini](https://gemini.ai/) for providing the AI model.
-- [LeetCode](https://leetcode.com/) for the coding challenges.
-- [React Community](https://reactjs.org/community/support.html) for their support and resources.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
