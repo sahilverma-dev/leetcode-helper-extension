@@ -1,10 +1,24 @@
-import { FaGithub as GithubIcon } from "react-icons/fa";
-import ThemeToggle from "./ThemeToggle";
 import { motion } from "framer-motion";
+// import { FaGithub as GithubIcon } from "react-icons/fa";
+// import ThemeToggle from "./ThemeToggle";
 
-import { buttonVariants } from "./ui/button";
+// import { buttonVariants } from "./ui/button";
 
-const Header = () => {
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { MODELS } from "@/constants/models";
+
+interface Props {
+  selectedModel: string;
+  onChangeModel: (model: string) => void;
+}
+
+const Header: React.FC<Props> = ({ selectedModel, onChangeModel }) => {
   return (
     <div className="text-sm p-2 border-b flex items-center justify-between">
       <p className="font-bold px-2 flex items-center gap-2">
@@ -17,7 +31,18 @@ const Header = () => {
         />
         Leetcode Helper Bot
       </p>
-      <div className="flex items-center gap-2">
+
+      <Select value={selectedModel} onValueChange={onChangeModel}>
+        <SelectTrigger className="w-[180px] truncate text-xs">
+          <SelectValue placeholder="Select a your model" />
+        </SelectTrigger>
+        <SelectContent>
+          {MODELS.map((model) => (
+            <SelectItem value={model.model}>{model.display}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {/* <div className="flex items-center gap-2">
         <a
           href="https://github.com/sahilverma-dev/leetcode-helper-extension"
           target="_blank"
@@ -30,7 +55,7 @@ const Header = () => {
           <GithubIcon />
         </a>
         <ThemeToggle className="rounded-full" />
-      </div>
+      </div> */}
     </div>
   );
 };

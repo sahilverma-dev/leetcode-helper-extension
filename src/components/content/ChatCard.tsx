@@ -27,7 +27,8 @@ const ChatCard: React.FC<Props> = ({ chat }) => {
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "border bg-secondary mb-2 w-[300px] rounded-lg p-3 flex items-start hover:bg-secondary/80 transition-colors shadow-sm dark:shadow-gray-800"
+        "border mb-2 w-[300px] rounded-lg p-3 flex items-start transition-colors",
+        chat.by === "user" ? "bg-foreground text-foreground" : "bg-background"
       )}
     >
       <div
@@ -38,23 +39,29 @@ const ChatCard: React.FC<Props> = ({ chat }) => {
       >
         <div
           className={cn(
-            "flex flex-col ",
+            "flex flex-col gap-2",
             chat.by === "user" ? "items-end" : "items-start"
           )}
         >
           {chat.type === "markdown" ? (
             <>
-              <ReactMarkdown className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
+              <ReactMarkdown className="text-sm  text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
                 {chat.message.feedback}
               </ReactMarkdown>
-              <Accordion type="multiple" className="w-full">
-                {chat.message.hints?.map((hint, index) => (
-                  <AccordionItem key={index} value={`item-${index}`}>
-                    <AccordionTrigger>Hint {index + 1}</AccordionTrigger>
-                    <AccordionContent>{hint}</AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              {chat.message.hints && (
+                <Accordion type="multiple" className="w-full border rounded-md">
+                  {chat.message.hints?.map((hint, index) => (
+                    <AccordionItem
+                      className="px-4"
+                      key={index}
+                      value={`item-${index}`}
+                    >
+                      <AccordionTrigger>Hint {index + 1}</AccordionTrigger>
+                      <AccordionContent>{hint}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              )}
               {chat.message.snippet?.code && chat.message.snippet.language && (
                 <ScrollArea className="w-[270px] h-[300px] overflow-auto rounded-xl">
                   <SyntaxHighlighter
@@ -65,7 +72,7 @@ const ChatCard: React.FC<Props> = ({ chat }) => {
               )}
             </>
           ) : (
-            <p className="text-sm text-gray-600 dark:text-gray-300 whitespace-pre-wrap break-words">
+            <p className="text-sm  whitespace-pre-wrap break-words">
               {chat.message}
             </p>
           )}

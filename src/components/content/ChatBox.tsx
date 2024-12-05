@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import Header from "../Header";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { createAnthropic } from "@ai-sdk/anthropic";
+import { generateObject, LanguageModelV1 } from "ai";
 
 import { ScrollArea } from "../ui/scroll-area";
 import ChatList from "./ChatList";
@@ -11,6 +13,7 @@ import ChatForm from "../forms/ChatForm";
 import { SYSTEM_PROMPT } from "@/constants/prompt";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
+import { Model, MODELS } from "@/constants/models";
 
 interface UserChat {
   by: "user";
@@ -105,9 +108,62 @@ const getProblemData = () => {
   };
 };
 
+const getModel = (modelName: Model, apiKey: string) => {
+  if (modelName === "gemini_1.5_flash") {
+    const google = createGoogleGenerativeAI({
+      apiKey,
+    });
+
+    return google("gemini-1.5-flash");
+  }
+
+  if (modelName === "openai_3.5_turbo") {
+    const openai = createOpenAI({
+      apiKey,
+    });
+
+    return openai("gpt-3.5-turbo");
+  }
+
+  if (modelName === "openai_4o") {
+    const openai = createOpenAI({
+      apiKey,
+    });
+
+    return openai("gpt-4o");
+  }
+
+  if (modelName === "gemini_1.5_pro") {
+    const google = createGoogleGenerativeAI({
+      apiKey,
+    });
+
+    return google("gemini-1.5-pro");
+  }
+
+  if (modelName === "claude_3_haiku") {
+    const claude = createAnthropic({
+      apiKey,
+    });
+
+    return claude("claude-3-haiku-20240307");
+  }
+
+  if (modelName === "claude_3_sonnet") {
+    const claude = createAnthropic({
+      apiKey,
+    });
+
+    return claude("claude-3-5-sonnet-20241022");
+  }
+};
+
 const ChatBox = () => {
   const [chats, setChats] = useState<Chat[]>([]);
-  const [selectedModel, setSelectedModel] = useState<null | string>(null);
+
+  const [selectedModel, setSelectedModel] = useState<string>(MODELS[0].model);
+
+  const scrollEleRef = useRef<HTMLDivElement>(null);
 
   const [apiKey, setApiKey] = useState("");
 
@@ -147,12 +203,14 @@ const ChatBox = () => {
         .replace("{{user_code}}", problemData?.code as string)
         .replace("{{user_message}}", message);
 
-      const google = createGoogleGenerativeAI({
-        apiKey,
-      });
+      const currentModel = MODELS.find(
+        (model) => model.model === selectedModel
+      );
+
+      const model = getModel(currentModel?.name as Model, apiKey);
 
       const { object } = await generateObject({
-        model: google("gemini-1.5-pro"),
+        model: model as LanguageModelV1,
         schema: z.object({
           feedback: z.string(),
           hints: z
@@ -221,17 +279,42 @@ const ChatBox = () => {
 
     onError: (error) => {
       console.log(error);
-      toast.error("Something went wrong");
+      if (error?.message.startsWith("API key not valid.")) {
+        // toast.error("API key not valid.");
+        setChats((chats) => [
+          ...chats,
+          {
+            by: "bot",
+            message: {
+              // TODO : Add link for all models on new tab
+              feedback: error.message,
+            },
+            type: "markdown",
+          },
+        ]);
+      }
+      toast.error(error?.message || "Something went wrong");
     },
   });
 
   const handleDeleteChats = () => {
     setChats([]);
+
+    if (problemData?.id) {
+      chrome.storage.local.remove(problemData.id);
+    }
   };
 
-  const onSend = (message: string) => {
-    toast.success("Message sent successfully!");
+  useEffect(() => {
+    // console.log("model changed", selectedModel);
 
+    chrome.storage.local.get([selectedModel], (result) => {
+      console.log(result);
+      // setApiKey(result);
+    });
+  }, [selectedModel]);
+
+  const onSend = (message: string) => {
     setChats((prevChats) => {
       const updatedChats: Chat[] = [
         ...prevChats,
@@ -251,6 +334,12 @@ const ChatBox = () => {
     mutate(message);
   };
 
+  useEffect(() => {
+    if (scrollEleRef.current) {
+      scrollEleRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chats]);
+
   return (
     <motion.div
       layout
@@ -260,7 +349,7 @@ const ChatBox = () => {
       exit={{ opacity: 0 }}
       className="fixed z-50 bottom-8 right-8 bg-background backdrop-blur border shadow-xl rounded-xl h-auto w-[400px] "
     >
-      <Header />
+      <Header selectedModel={selectedModel} onChangeModel={setSelectedModel} />
       {selectedModel ? (
         <>
           <ScrollArea className="p-2 text-sm flex flex-col h-[500px] overflow-y-scroll items-center gap-2">
@@ -273,12 +362,13 @@ const ChatBox = () => {
             >
               click
             </button> */}
-
+            apikey {apiKey}
             <ChatList
               chats={chats}
               onDeleteChat={handleDeleteChats}
               isLoading={isPending}
             />
+            <div ref={scrollEleRef} />
           </ScrollArea>
           <ChatForm onSend={onSend} isLoading={isPending} />
         </>

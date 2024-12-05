@@ -18,6 +18,10 @@ const Content = () => {
       if (e.key === "Escape") {
         setShowChat(false);
       }
+
+      if ((e.key === "k" && e.metaKey) || (e.key === "k" && e.ctrlKey)) {
+        setShowChat((state) => !state);
+      }
     };
   }, []);
   return (

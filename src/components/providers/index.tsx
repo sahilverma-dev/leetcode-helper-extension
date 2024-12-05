@@ -10,13 +10,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <ReactQueryProvider>
             {children}
-            <Toaster
-              richColors
-              position="top-center"
-              toastOptions={{
-                duration: 1000,
-              }}
-            />
+            <Toaster richColors position="top-left" />
           </ReactQueryProvider>
         </ThemeProvider>
       </TooltipProvider>
