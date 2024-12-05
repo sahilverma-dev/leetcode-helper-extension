@@ -2,7 +2,7 @@
   "name": "Leetcode Helper Bot",
   "description": "A browser extension designed to assist users in solving LeetCode problems by providing real-time information and tools.",
   "manifest_version": 3,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "action": {
     "default_popup": "index.html"
   },
