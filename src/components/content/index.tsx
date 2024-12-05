@@ -26,7 +26,7 @@ const Content = () => {
   }, []);
   return (
     <AnimatePresence mode="wait">
-      {showChat && <ChatBox />}
+      {showChat && <ChatBox onClose={() => setShowChat(false)} />}
       {!showChat && (
         <Tooltip>
           <TooltipTrigger asChild>

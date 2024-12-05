@@ -28,7 +28,7 @@ const ChatCard: React.FC<Props> = ({ chat }) => {
       transition={{ duration: 0.3 }}
       className={cn(
         "border mb-2 w-[300px] rounded-lg p-3 flex items-start transition-colors",
-        chat.by === "user" ? "bg-foreground text-foreground" : "bg-background"
+        chat.by === "user" ? "bg-secondary text-foreground" : "bg-background"
       )}
     >
       <div

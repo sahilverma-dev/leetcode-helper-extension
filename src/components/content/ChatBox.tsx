@@ -14,6 +14,7 @@ import { SYSTEM_PROMPT } from "@/constants/prompt";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 import { Model, MODELS } from "@/constants/models";
+import { Button } from "../ui/button";
 
 interface UserChat {
   by: "user";
@@ -158,7 +159,11 @@ const getModel = (modelName: Model, apiKey: string) => {
   }
 };
 
-const ChatBox = () => {
+interface ChatBoxProps {
+  onClose: () => void;
+}
+
+const ChatBox: React.FC<ChatBoxProps> = ({ onClose }) => {
   const [chats, setChats] = useState<Chat[]>([]);
 
   const [selectedModel, setSelectedModel] = useState<string>(MODELS[0].model);
@@ -247,7 +252,7 @@ const ChatBox = () => {
       hints?: string[] | undefined;
       snippet?: { code: string | undefined; language: string | undefined };
     }) => {
-      console.log(data);
+      // console.log(data);
 
       if (problemData?.id) {
         chrome.storage.local.get([problemData.id], (result) => {
@@ -278,15 +283,13 @@ const ChatBox = () => {
     },
 
     onError: (error) => {
-      console.log(error);
+      // console.log(error);
       if (error?.message.startsWith("API key not valid.")) {
-        // toast.error("API key not valid.");
         setChats((chats) => [
           ...chats,
           {
             by: "bot",
             message: {
-              // TODO : Add link for all models on new tab
               feedback: error.message,
             },
             type: "markdown",
@@ -304,15 +307,6 @@ const ChatBox = () => {
       chrome.storage.local.remove(problemData.id);
     }
   };
-
-  useEffect(() => {
-    // console.log("model changed", selectedModel);
-
-    chrome.storage.local.get([selectedModel], (result) => {
-      console.log(result);
-      // setApiKey(result);
-    });
-  }, [selectedModel]);
 
   const onSend = (message: string) => {
     setChats((prevChats) => {
@@ -350,19 +344,9 @@ const ChatBox = () => {
       className="fixed z-50 bottom-8 right-8 bg-background backdrop-blur border shadow-xl rounded-xl h-auto w-[400px] "
     >
       <Header selectedModel={selectedModel} onChangeModel={setSelectedModel} />
-      {selectedModel ? (
+      {selectedModel && apiKey ? (
         <>
           <ScrollArea className="p-2 text-sm flex flex-col h-[500px] overflow-y-scroll items-center gap-2">
-            {/* <button
-              onClick={() => {
-                const problem = getProblemData();
-
-                console.log(problem);
-              }}
-            >
-              click
-            </button> */}
-            apikey {apiKey}
             <ChatList
               chats={chats}
               onDeleteChat={handleDeleteChats}
@@ -373,7 +357,26 @@ const ChatBox = () => {
           <ChatForm onSend={onSend} isLoading={isPending} />
         </>
       ) : (
-        <div></div>
+        <div className="h-[500px] flex flex-col items-center text-center justify-center gap-4">
+          <img
+            src="https://emojiisland.com/cdn/shop/products/Thinking_Face_Emoji_large.png?v=1571606036"
+            className="w-32 object-cover aspect-square"
+            alt=""
+          />
+          <p>
+            Hmmmmm! Seems like you didn't <br /> set your API key yet.
+          </p>
+          <Button
+            className="rounded-full"
+            onClick={() => {
+              // open popup
+              onClose();
+              chrome.runtime.sendMessage({ action: "openPopup" });
+            }}
+          >
+            Set it now
+          </Button>
+        </div>
       )}
     </motion.div>
   );
