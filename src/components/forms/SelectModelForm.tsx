@@ -25,11 +25,7 @@ const formSchema = z.object({
       invalid_type_error: "API key must be a string",
     })
     .min(10, "API key must be at least 10 characters")
-    .max(256, "API key cannot exceed 256 characters")
-    .regex(
-      /^[a-zA-Z0-9_-]+$/,
-      "API key can only contain letters, numbers, underscores, and hyphens"
-    ),
+    .max(256, "API key cannot exceed 256 characters"),
 });
 
 // components
@@ -51,16 +47,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { MODELS } from "@/constants/modals";
+import { MODELS } from "@/constants/models";
 import { PasswordInput } from "../ui/ password-input";
 import { toast } from "sonner";
-import { SaveIcon } from "lucide-react";
+import { Loader2Icon, SaveIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const SelectModelForm = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      model: "gpt-3.5-turbo",
+      model: "",
       apiKey: "",
     },
   });
@@ -68,13 +67,38 @@ const SelectModelForm = () => {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
 
-    if (!form.formState.isValid) {
-      toast.error("Please fill out all fields.", {
-        position: "top-left",
-        closeButton: true,
-      });
-    }
+    toast.success("Model and API key saved successfully!", {
+      position: "top-center",
+    });
+
+    // save model and api key to chrome storage
+    chrome.storage.local.set({
+      model: values.model,
+      [values.model]: values.apiKey,
+    });
   }
+
+  useEffect(() => {
+    chrome.storage.local.get("model", (result) => {
+      const currentModel = result.model || MODELS[0].model;
+      form.setValue("model", currentModel);
+
+      chrome.storage.local.get(currentModel, (apiKeyResult) => {
+        form.setValue("apiKey", apiKeyResult[currentModel]);
+      });
+
+      setIsLoading(false);
+    });
+  }, [form]);
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Loader2Icon className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
       <form
@@ -88,9 +112,24 @@ const SelectModelForm = () => {
             <FormItem>
               <FormLabel>Model</FormLabel>
 
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(e) => {
+                  chrome.storage.local.get(e, (result) => {
+                    if (result[e]) {
+                      form.setValue("apiKey", result[e]);
+                    } else {
+                      form.setValue("apiKey", "");
+                    }
+                  });
+                  field.onChange(e);
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl>
-                  <SelectTrigger className="rounded-full text-sm">
+                  <SelectTrigger
+                    value={field.value}
+                    className="rounded-full text-sm"
+                  >
                     <SelectValue placeholder="Select your preferred model" />
                   </SelectTrigger>
                 </FormControl>

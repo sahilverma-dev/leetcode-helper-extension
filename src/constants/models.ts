@@ -1,5 +1,10 @@
 export const MODELS = [
   {
+    model: "gemini-1.5-flash",
+    name: "gemini_1.5_flash",
+    display: "Gemini 1.5 Flash",
+  },
+  {
     model: "gpt-3.5-turbo",
     name: "openai_3.5_turbo",
     display: "GPT-3.5 Turbo",
@@ -19,4 +24,8 @@ export const MODELS = [
 /**
  * Type of valid models that can be used in the application.
  */
-export type Model = "openai_3.5_turbo" | "openai_4o" | "gemini_1.5_pro";
+export type Model =
+  | "gemini-1.5-flash"
+  | "openai_3.5_turbo"
+  | "openai_4o"
+  | "gemini_1.5_pro";

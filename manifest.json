@@ -12,6 +12,15 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "content_scripts": [
+    {
+      "js": ["src/content.tsx"],
+      "matches": ["https://leetcode.com/problems/*"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
   "permissions": ["storage"],
   "host_permissions": ["https://leetcode.com/*"]
 }
